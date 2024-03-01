@@ -1,9 +1,11 @@
 /* eslint-disable */
 import { createContext, useEffect, useReducer } from "react";
 import gameReducer, { initialGameReducerState } from "../reducers/gameReducer";
-import type { Challenge } from "../types";
+import type { Challenge, GameReducerAction, GameReducerState } from "../types";
 
-type GameContextOptions = {};
+type GameContextOptions = GameReducerState & {
+  updateGameState: React.Dispatch<GameReducerAction>;
+};
 
 export const GameContext = createContext<GameContextOptions | null>(null);
 
@@ -36,5 +38,14 @@ export default function GameSessionProvider({ children }: { children: React.Reac
     children
   );
 
-  return <GameContext.Provider value={{}}>{content}</GameContext.Provider>;
+  return (
+    <GameContext.Provider
+      value={{
+        ...gameState,
+        updateGameState,
+      }}
+    >
+      {content}
+    </GameContext.Provider>
+  );
 }
