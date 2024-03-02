@@ -3,7 +3,8 @@ import { createContext, useEffect, useReducer } from "react";
 import gameReducer, { initialGameReducerState } from "../reducers/gameReducer";
 import type { Challenge, GameReducerAction, GameReducerState } from "../types";
 
-type GameContextOptions = GameReducerState & {
+type GameContextOptions = {
+  gameState: GameReducerState;
   updateGameState: React.Dispatch<GameReducerAction>;
 };
 
@@ -38,10 +39,20 @@ export default function GameSessionProvider({ children }: { children: React.Reac
     children
   );
 
+  /**
+   * TODO: feature to implement
+   * !NOTE: see consideration below
+   * When returning a random word, you're gonna have
+   * to using a while loop if the user has already guessed
+   * a specific challenge and at the same time keeping
+   * track of all random challenges. If going though all the challenges,
+   * we then exit the while loop and return a warning label.
+   */
+
   return (
     <GameContext.Provider
       value={{
-        ...gameState,
+        gameState,
         updateGameState,
       }}
     >
