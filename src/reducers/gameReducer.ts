@@ -5,7 +5,6 @@ export const initialGameReducerState = {
   error: null,
   wordTyped: "",
   hasUserWonChallenge: false,
-  hasUserLostChallenge: false,
   challenge: null,
   guessesAmount: 0,
 } satisfies GameReducerState;
@@ -17,6 +16,16 @@ export default function (state: GameReducerState, action: GameReducerAction) {
       return {
         ...state,
         isRetrievingChallenge: updatedLoadingState,
+      };
+    }
+
+    case "VERIFY_WORD_VALIDITY": {
+      return {
+        ...state,
+        wordTyped: "",
+        ...(state.wordTyped === state.challenge?.answer
+          ? { hasUserWonChallenge: true }
+          : { guessesAmount: state.guessesAmount + 1 }),
       };
     }
 
@@ -33,6 +42,15 @@ export default function (state: GameReducerState, action: GameReducerAction) {
       return {
         ...state,
         challenge: updatedChallenge,
+      };
+    }
+
+    case "UPDATE_CURRENT_GUESS": {
+      const { payload: updatedCurrentGuess } = action;
+
+      return {
+        ...state,
+        wordTyped: updatedCurrentGuess,
       };
     }
 
@@ -62,13 +80,6 @@ export default function (state: GameReducerState, action: GameReducerAction) {
       return {
         ...state,
         hasUserWonChallenge: true,
-      };
-    }
-
-    case "SET_USER_LOST": {
-      return {
-        ...state,
-        hasUserLostChallenge: true,
       };
     }
 

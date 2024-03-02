@@ -8,7 +8,6 @@ export type GameReducerState = {
   error: Error | null;
   wordTyped: string;
   hasUserWonChallenge: boolean;
-  hasUserLostChallenge: boolean;
   challenge: Challenge | null;
   guessesAmount: number;
 };
@@ -20,5 +19,6 @@ export type GameReducerAction =
   | { type: "ADD_LETTER"; payload: string }
   | { type: "REMOVE_LETTER" }
   | { type: "SET_USER_WON" }
-  | { type: "SET_USER_LOST" }
-  | { type: "INCREASE_AMOUNT_WRONG_GUESSES" };
+  | { type: "INCREASE_AMOUNT_WRONG_GUESSES" }
+  | { type: "UPDATE_CURRENT_GUESS"; payload: string }
+  | { type: "VERIFY_WORD_VALIDITY" };
