@@ -1,0 +1,21 @@
+.guessesText {
+  color: rgb(237, 237, 237);
+  margin: 1rem 0;
+}
+
+.guessesBoxWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.guessesBox {
+  height: 5px;
+  width: 30px;
+  border-radius: 5px;
+  box-shadow: 0px 16px 40px rgba(112, 144, 176, 0.2);
+}
+
+.guessesBox.incorrect {
+  background-color: rgb(212, 0, 0);
+}
