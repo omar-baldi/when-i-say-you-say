@@ -2,6 +2,7 @@ import type { GameReducerAction, GameReducerState } from "../types";
 
 export const initialGameReducerState = {
   isRetrievingChallenge: true,
+  allowedToPlayChallenge: true,
   error: null,
   wordTyped: "",
   hasUserWonChallenge: false,
@@ -19,13 +20,11 @@ export default function (state: GameReducerState, action: GameReducerAction) {
       };
     }
 
-    case "VERIFY_WORD_VALIDITY": {
+    case "ALLOWED_TO_PLAY": {
+      const { payload: allowedToPlay } = action;
       return {
         ...state,
-        wordTyped: "",
-        ...(state.wordTyped === state.challenge?.answer
-          ? { hasUserWonChallenge: true }
-          : { guessesAmount: state.guessesAmount + 1 }),
+        allowedToPlayChallenge: allowedToPlay,
       };
     }
 
@@ -66,6 +65,13 @@ export default function (state: GameReducerState, action: GameReducerAction) {
       return {
         ...state,
         wordTyped: state.wordTyped.slice(0, -1),
+      };
+    }
+
+    case "RESET_WORD_TYPED": {
+      return {
+        ...state,
+        wordTyped: "",
       };
     }
 

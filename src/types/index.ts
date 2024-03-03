@@ -5,6 +5,7 @@ export type Challenge = {
 
 export type GameReducerState = {
   isRetrievingChallenge: boolean;
+  allowedToPlayChallenge: boolean;
   error: Error | null;
   wordTyped: string;
   hasUserWonChallenge: boolean;
@@ -21,4 +22,17 @@ export type GameReducerAction =
   | { type: "SET_USER_WON" }
   | { type: "INCREASE_AMOUNT_WRONG_GUESSES" }
   | { type: "UPDATE_CURRENT_GUESS"; payload: string }
-  | { type: "VERIFY_WORD_VALIDITY" };
+  | { type: "ALLOWED_TO_PLAY"; payload: boolean }
+  | { type: "RESET_WORD_TYPED" };
+
+export type ChallengeWonStorage = {
+  challenge: Challenge;
+  guesses: number;
+  date: Date;
+};
+
+export type GameSessionStorage = {
+  lastSessionPlayedDate: Date | null;
+  streak: number;
+  challengesWon: ChallengeWonStorage[];
+};
