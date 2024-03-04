@@ -56,4 +56,19 @@ describe("useCountdown", () => {
     expect(result.current.minutes).toBe(0);
     expect(result.current.seconds).toBe(0);
   });
+
+  it("should cbFunc be executed when countdown has reached eventDate and clearInterval be called", async () => {
+    const cbFuncSpy = vi.fn();
+    const clearIntervalSpy = vi.spyOn(global, "clearInterval");
+
+    renderHook(() => {
+      const d = new Date();
+      d.setTime(d.getTime() + 1000);
+      return useCountdown({ eventDate: d, onTimerEnd: cbFuncSpy });
+    });
+
+    act(() => vi.advanceTimersByTime(1000));
+    expect(cbFuncSpy).toHaveBeenCalled();
+    expect(clearIntervalSpy).toHaveBeenCalled();
+  });
 });
