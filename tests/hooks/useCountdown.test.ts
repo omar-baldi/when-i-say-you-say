@@ -43,4 +43,17 @@ describe("useCountdown", () => {
     expect(result.current.minutes).toBe(58);
     expect(result.current.seconds).toBe(0);
   });
+
+  it("should update all values when 2 hours have passed", async () => {
+    const { result } = renderHook(() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      return useCountdown({ eventDate: d });
+    });
+
+    act(() => vi.advanceTimersByTime(3600000 * 2));
+    expect(result.current.hours).toBe(22);
+    expect(result.current.minutes).toBe(0);
+    expect(result.current.seconds).toBe(0);
+  });
 });
