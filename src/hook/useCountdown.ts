@@ -21,7 +21,7 @@ const initialReducerState = {
  * TODO: provide optional callback function called "onTimeEnd" so parent element can set "allowedToPlay: true"...
  * TODO: ...as well as setting "lastSessionPlayed: null"
  */
-export const useCountdown = (eventDate: Date) => {
+export const useCountdown = (eventDate: Date, cbFunc: () => void) => {
   const [countdownState, updateCountdownState] = useReducer(function (
     state: ReducerState,
     updatedState: Partial<ReducerState>
@@ -41,6 +41,7 @@ export const useCountdown = (eventDate: Date) => {
 
       if (difference <= 0) {
         clearInterval(interval);
+        cbFunc();
         return;
       }
 
