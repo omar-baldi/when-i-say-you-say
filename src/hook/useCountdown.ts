@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 
 type ReducerState = {
   hours: number;
@@ -17,11 +16,20 @@ const initialReducerState = {
  * @description Custom hook responsible
  * of calculating days, minutes and seconds
  * remaining from today's Date and a eventDate.
- *
- * TODO: provide optional callback function called "onTimeEnd" so parent element can set "allowedToPlay: true"...
- * TODO: ...as well as setting "lastSessionPlayed: null"
  */
-export const useCountdown = (eventDate: Date, cbFunc: () => void) => {
+export const useCountdown = ({
+  eventDate,
+  onTimerEnd,
+}: {
+  eventDate: Date;
+  onTimerEnd?: () => void;
+}) => {
+  const onTimerEndRef = useRef<() => void>();
+
+  useEffect(() => {
+    onTimerEndRef.current = onTimerEnd;
+  }, [onTimerEnd]);
+
   const [countdownState, updateCountdownState] = useReducer(function (
     state: ReducerState,
     updatedState: Partial<ReducerState>
@@ -41,7 +49,7 @@ export const useCountdown = (eventDate: Date, cbFunc: () => void) => {
 
       if (difference <= 0) {
         clearInterval(interval);
-        cbFunc();
+        onTimerEndRef.current?.();
         return;
       }
 
