@@ -1,24 +1,27 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * @description Custom hook responsible
  * for storing a specific value and retrieving it
  */
 export const useLocalStorage = <T>(key: string, defaultValue: T) => {
-  const [storageValue, setStorageValue] = useState<T>(() => getStorageValue(key));
+  const getStorageValue = useCallback(
+    function () {
+      try {
+        const v = window.localStorage.getItem(key);
+        return v ? JSON.parse(v) : defaultValue;
+      } catch (err) {
+        return defaultValue;
+      }
+    },
+    [defaultValue, key]
+  );
 
-  function getStorageValue(key: string): T {
-    try {
-      const v = localStorage.getItem(key);
-      return v ? JSON.parse(v) : defaultValue;
-    } catch (err) {
-      return defaultValue;
-    }
-  }
+  const [storageValue, setStorageValue] = useState<T>(() => getStorageValue());
 
   function updateStorageValue(value: T) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      window.localStorage.setItem(key, JSON.stringify(value));
       setStorageValue(value);
     } catch (err) {
       console.error(`Cannot set new value for following storage key: ${key}`);
@@ -26,8 +29,8 @@ export const useLocalStorage = <T>(key: string, defaultValue: T) => {
   }
 
   useEffect(() => {
-    setStorageValue(getStorageValue(key));
-  }, [key]);
+    setStorageValue(getStorageValue());
+  }, [getStorageValue]);
 
   return [storageValue, updateStorageValue] as const;
 };
